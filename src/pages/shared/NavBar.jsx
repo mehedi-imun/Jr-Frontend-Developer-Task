@@ -2,8 +2,8 @@ import React from "react";
 
 const NavBar = () => {
   return (
-    <div class="container mx-auto lg:px-8 px-2">
-      <div class="flex items-center justify-between py-4">
+    <div className="container mx-auto lg:px-8 px-2">
+      <div className="flex items-center justify-between py-4">
         <div className="flex">
           <svg
             width="51"
@@ -54,9 +54,9 @@ const NavBar = () => {
           </h3>
         </div>
 
-        <div class="hidden sm:flex sm:items-center">{/* navbar items */}</div>
+        <div className="hidden sm:flex sm:items-center">{/* navbar items */}</div>
 
-        <div class="">
+        <div className="">
           <select
             className=" bg-[#F0F5FA] text-[#B0B7C3]  py-1 px-3 outline-none rounded-full"
             name="lang"
