@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import lock from "../../assets/lock-rounded.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SocialLogin from "../shared/SocialLogin";
 
 const Login = () => {
+    const location = useLocation()
+    const navigate = useNavigate()
+    let from = location.state?.from?.pathname || "/";
   const [isVisible, setVisible] = useState(false);
   const toggle = () => {
     setVisible(!isVisible);
@@ -43,7 +46,7 @@ const Login = () => {
             )}
           </i>
         </div>
-        <div className="flex items-center my-[35px] text-[#B0B7C3] ">
+        <div className="flex items-center mt-[28px] mb-[35px] text-[#B0B7C3] ">
           <input
             id="default-checkbox"
             type="checkbox"
