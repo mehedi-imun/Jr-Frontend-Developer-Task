@@ -24,30 +24,32 @@ export const router = createBrowserRouter([
         path: "register",
         element: <SignUp></SignUp>,
       },
+      
+    ],
+  },
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <Dashboard>
+          <Outlet />
+        </Dashboard>
+      </PrivateRoute>
+    ),
+    children: [
       {
-        path: "dashboard",
-        element: (
-          <PrivateRoute>
-            <Dashboard>
-              <Outlet />
-            </Dashboard>
-          </PrivateRoute>
-        ),
-        children: [
-          {
-            path: "",
-            element: <h1>Welcome to the dashboard</h1>,
-          },
-          {
-            path: "users",
-            element: <Users></Users>,
-          },
-          {
-            path: "Sales",
-            element: <Sales></Sales>,
-          },
-        ],
+        path: "",
+        element: <h1>Welcome to the dashboard</h1>,
+      },
+      {
+        path: "users",
+        element: <Users></Users>,
+      },
+      {
+        path: "Sales",
+        element: <Sales></Sales>,
       },
     ],
   },
+  
 ]);
