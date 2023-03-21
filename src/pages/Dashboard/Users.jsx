@@ -1,17 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import notification from "../../assets/notification-bell.png";
+import PaginationComponents from "./PaginationComponents";
 const Users = () => {
+  const [data,setData]=useState([]);
+  const [currentPage,setCurrentPage]=useState(1);
+  const [perPage,setPerPage]=useState(2);
+  const handleClick=(event)=>{
+    setCurrentPage(Number(event.target.id))
+
+  }
+  let pages =[];
+  for(let i=1; i <= Math.ceil(data?.length/perPage); i++ ){
+      pages.push(i)
+  };
+  const indexOfLastItem= currentPage * perPage;
+  const indexOfFirstItem= indexOfLastItem - perPage;
+  const currentItems = data.slice(indexOfFirstItem,indexOfLastItem) 
+  const renderPageNumbers = pages.map((number)=>{
+      return <li onClick={handleClick} className={`border h-[32px] w-[32px] flex justify-center items-center text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer ${currentPage === number ?'bg-[#2F80ED] text-white':''}`} key={number} id={number}>
+        {number}
+      </li>
+  
+  })
+
+
+
+
+
+
+
+
+
+  useEffect(()=>{
+      fetch('https://reqres.in/api/users').then(res=>res.json()).then(data=>setData(data.data))
+  },[])
   return (
     <div>
       <div className="lg:px-6 px-2 mt-6">
         <div className="flex items-center justify-between ">
-          <div className="relative flex justify-end items-center border border-[#F3F3F3] lg:w-96 rounded-lg font-medium ">
+          <div class="relative flex justify-end items-center border border-[#F3F3F3] lg:w-96 rounded-lg font-medium ">
             <input
               id="name"
               type="text"
               name="name"
-              className="h-11 w-full focus:outline-none ml-2"
+              class="h-11 w-full focus:outline-none ml-2"
               placeholder="Search"
             />
             <i className="pr-[1rem] cursor-pointer">
@@ -26,7 +59,7 @@ const Users = () => {
             </div>
             <div className="ml-4">
               <img
-                className="w-[47px] h-[47px] rounded-full"
+                class="w-[47px] h-[47px] rounded-full"
                 src="https://thumbs.dreamstime.com/b/male-avatar-icon-flat-style-male-user-icon-cartoon-man-avatar-hipster-vector-stock-91462914.jpg"
                 alt=""
               />
@@ -35,51 +68,60 @@ const Users = () => {
         </div>
         <div>
           <h3 className="my-6 text-[#323B4B] font-semibold">Users List</h3>
-          <div className="relative overflow-x-auto">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+          <div class="relative overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3 rounded-l-lg">
+                  <th scope="col" class="px-6 py-3 rounded-l-lg">
                     #ID
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" class="px-6 py-3">
                     USER
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th scope="col" class="px-6 py-3">
                     EMAIL
                   </th>
-                  <th scope="col" className="px-6 py-3 rounded-r-lg">
+                  <th scope="col" class="px-6 py-3 rounded-r-lg">
                     OPTIONS
                   </th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="bg-white dark:bg-gray-800">
-                  <td className="px-6 py-4">1</td>
-                  <td className="px-6 py-4">
+                {currentItems?.map(user=><tr class="bg-white dark:bg-gray-800">
+                  <td class="px-6 py-4">{user.id}</td>
+                  <td class="px-6 py-4">
                     <div className="flex items-center">
                       <img
-                        className="w-[60px] h-[60px] rounded"
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjb-Jsep9tAcYMGcwnDZl9MuXwtJ87LMh-KkFZT04M9XQRs6I0mWi4GJcUD7bTPEOAXRU&usqp=CAU"
+                        class="w-[60px] h-[60px] rounded"
+                        src={user.avatar}
                         alt=""
                       />
 
-                      <h3 className="text-[#4E5D78] ml-2">Jhankar vai</h3>
+                      <h3 className="text-[#4E5D78] ml-2">{user.first_name}</h3>
                     </div>
                   </td>
                   <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    Apple@gmail.com
+                    {user.email}
                   </th>
-                  <td className="px-6 py-4">$2999</td>
-                </tr>
+                  <td class="px-6 py-4">...</td>
+                </tr>)}
               </tbody>
             </table>
           </div>
         </div>
       </div>
+     
+<ul className="flex">
+{renderPageNumbers}
+</ul>
+
+
+
+
+
     </div>
   );
 };

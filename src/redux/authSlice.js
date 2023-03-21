@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axiosPrivate from "../api/api";
 
 const initialState = {
   loading: false,
@@ -9,27 +10,15 @@ const initialState = {
 export const signUpReducer = createAsyncThunk(
   "signupUser",
   async (userData) => {
-    const res = await fetch("https://reqres.in/api/register", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    return await res.json();
+    const response = await axiosPrivate.post("/register", userData);
+    return response.data;
   }
 );
 export const signInReducer = createAsyncThunk(
   "signInUser",
   async (userData) => {
-    const res = await fetch("https://reqres.in/api/login", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(userData),
-    });
-    return await res.json();
+    const response = await axiosPrivate.post("/login", userData);
+    return response.data;
   }
 );
 
@@ -48,7 +37,6 @@ const authSlice = createSlice({
         state.error = action.payload.error;
       } else {
         state.error = action.payload.message;
-        state.id = action.payload.id;
       }
     },
     [signUpReducer.rejected]: (state, action) => {
