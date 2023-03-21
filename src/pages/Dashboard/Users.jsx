@@ -1,40 +1,69 @@
 import React, { useEffect, useState } from "react";
 import { RiSearchLine } from "react-icons/ri";
 import notification from "../../assets/notification-bell.png";
-import PaginationComponents from "./PaginationComponents";
+import pevImg from "../../assets/Prev.png";
+import nextImg from "../../assets/Next.png";
 const Users = () => {
-  const [data,setData]=useState([]);
-  const [currentPage,setCurrentPage]=useState(1);
-  const [perPage,setPerPage]=useState(2);
-  const handleClick=(event)=>{
-    setCurrentPage(Number(event.target.id))
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(3);
+  const [pageNumberLimit, setPageNumberLimit] = useState(2);
+  const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(3);
+  const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
 
-  }
-  let pages =[];
-  for(let i=1; i <= Math.ceil(data?.length/perPage); i++ ){
-      pages.push(i)
+  const handleClick = (event) => {
+    setCurrentPage(Number(event.target.id));
   };
-  const indexOfLastItem= currentPage * perPage;
-  const indexOfFirstItem= indexOfLastItem - perPage;
-  const currentItems = data.slice(indexOfFirstItem,indexOfLastItem) 
-  const renderPageNumbers = pages.map((number)=>{
-      return <li onClick={handleClick} className={`border h-[32px] w-[32px] flex justify-center items-center text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer ${currentPage === number ?'bg-[#2F80ED] text-white':''}`} key={number} id={number}>
-        {number}
-      </li>
-  
-  })
+  let pages = [];
+  for (let i = 1; i <= Math.ceil(data?.length / perPage); i++) {
+    pages.push(i);
+  }
+  const indexOfLastItem = currentPage * perPage;
+  const indexOfFirstItem = indexOfLastItem - perPage;
+  const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+  const renderPageNumbers = pages.map((number) => {
+    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+      return (
+        <li
+          onClick={handleClick}
+          className={`border h-[32px] w-[32px] flex justify-center items-center text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer ${
+            currentPage === number ? "bg-[#2F80ED] text-white" : ""
+          }`}
+          key={number}
+          id={number}
+        >
+          {number}
+        </li>
+      );
+    } else {
+      return null;
+    }
+  });
+  useEffect(() => {
+    fetch(`https://reqres.in/api/users?page=${1}&per_page=${12}`)
+      .then((res) => res.json())
+      .then((data) => setData(data.data));
+  }, []);
 
+  const handleNextBtn = () => {
+    setCurrentPage(currentPage + 1);
+    if (currentPage + 1 > maxPageNumberLimit) {
+      setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+      setMinPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+    }
+  };
+  const handlePretBtn = () => {
+    setCurrentPage(currentPage - 1);
+    if ((currentPage - 1) % pageNumberLimit == 0) {
+      setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+      setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+    }
+  };
+  let pageIncrementBtn =null;
+  if(pages.length > maxPageNumberLimit){
+    pageIncrementBtn=<li className="border h-[32px] w-[32px] flex justify-center items-center bg-transparent text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer " onClick={handleNextBtn}>&hellip;</li>
+  }
 
-
-
-
-
-
-
-
-  useEffect(()=>{
-      fetch('https://reqres.in/api/users').then(res=>res.json()).then(data=>setData(data.data))
-  },[])
   return (
     <div>
       <div className="lg:px-6 px-2 mt-6">
@@ -87,41 +116,56 @@ const Users = () => {
                 </tr>
               </thead>
               <tbody>
-                {currentItems?.map(user=><tr class="bg-white dark:bg-gray-800">
-                  <td class="px-6 py-4">{user.id}</td>
-                  <td class="px-6 py-4">
-                    <div className="flex items-center">
-                      <img
-                        class="w-[60px] h-[60px] rounded"
-                        src={user.avatar}
-                        alt=""
-                      />
+                {currentItems?.map((user) => (
+                  <tr class="bg-white dark:bg-gray-800">
+                    <td class="px-6 py-4">{user.id}</td>
+                    <td class="px-6 py-4">
+                      <div className="flex items-center">
+                        <img
+                          class="w-[60px] h-[60px] rounded"
+                          src={user.avatar}
+                          alt=""
+                        />
 
-                      <h3 className="text-[#4E5D78] ml-2">{user.first_name}</h3>
-                    </div>
-                  </td>
-                  <th
-                    scope="row"
-                    class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {user.email}
-                  </th>
-                  <td class="px-6 py-4">...</td>
-                </tr>)}
+                        <h3 className="text-[#4E5D78] ml-2">
+                          {user.first_name}
+                        </h3>
+                      </div>
+                    </td>
+                    <th
+                      scope="row"
+                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {user.email}
+                    </th>
+                    <td class="px-6 py-4">...</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-     
-<ul className="flex">
-{renderPageNumbers}
-</ul>
-
-
-
-
-
+{/* pagination  */}
+      <ul className="flex justify-start ml-8 my-6">
+        <button
+          disabled={currentPage == pages[0] ? true : false}
+          onClick={handlePretBtn}
+          className="border h-[32px] w-[32px] flex justify-center items-center text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer "
+        >
+          <img src={pevImg} alt="" />
+        </button>
+        {renderPageNumbers}
+        {pageIncrementBtn}
+        <button
+          disabled={currentPage == pages[pages.length - 1] ? true : false}
+          onClick={handleNextBtn}
+          className="border h-[32px] w-[32px] flex justify-center items-center text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer "
+        >
+          {" "}
+          <img src={nextImg} alt="" />
+        </button>
+      </ul>
     </div>
   );
 };
