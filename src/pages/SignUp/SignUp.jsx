@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import lock from "../../assets/lock-rounded.png";
-import name from "../../assets/name-ounded.png";
 import PasswordStrengthBar from "react-password-strength-bar";
 import { Link } from "react-router-dom";
+import lock from "../../assets/lock-rounded.png";
+import name from "../../assets/name-ounded.png";
 import SocialLogin from "../shared/SocialLogin";
 const SignUp = () => {
   const [isVisible, setVisible] = useState(false);
@@ -28,7 +28,7 @@ const SignUp = () => {
           type="email"
           placeholder="@ Your Email "
         />
-        <div class="relative flex justify-end items-center border border-[#F3F3F3] w-full rounded-lg font-medium mb-[30px]">
+        <div className="relative flex justify-end items-center border border-[#F3F3F3] w-full rounded-lg font-medium mb-[30px]">
           <i className="pl-[1rem] cursor-pointer">
             <img src={name} alt="" />
           </i>
@@ -36,11 +36,11 @@ const SignUp = () => {
             id="name"
             type="text"
             name="name"
-            class="h-14 w-full   focus:outline-none focus:border-primary ml-2"
+            className="h-14 w-full   focus:outline-none focus:border-primary ml-2"
             placeholder="Your Name"
           />
         </div>
-        <div class="relative flex justify-end items-center border border-[#F3F3F3] w-full rounded-lg font-medium">
+        <div className="relative flex justify-end items-center border border-[#F3F3F3] w-full rounded-lg font-medium">
           <i className="pl-[1rem] cursor-pointer">
             <img src={lock} alt="" />
           </i>
@@ -48,7 +48,7 @@ const SignUp = () => {
             id="password"
             type={!isVisible ? "password" : "text"}
             name="password"
-            class="h-14 w-full  focus:outline-none focus:border-primary ml-2"
+            className="h-14 w-full  focus:outline-none focus:border-primary ml-2"
             placeholder="Create Password"
           />
           <i className="pr-[1rem] cursor-pointer" onClick={toggle}>

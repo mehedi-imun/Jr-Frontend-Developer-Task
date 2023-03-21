@@ -1,17 +1,27 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import lock from "../../assets/lock-rounded.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import lock from "../../assets/lock-rounded.png";
 import SocialLogin from "../shared/SocialLogin";
 
 const Login = () => {
-    const location = useLocation()
-    const navigate = useNavigate()
-    let from = location.state?.from?.pathname || "/";
+  const location = useLocation();
+  const navigate = useNavigate();
+  let from = location.state?.from?.pathname || "/";
+  // show password state
   const [isVisible, setVisible] = useState(false);
-  const toggle = () => {
-    setVisible(!isVisible);
+  // handle login
+  let errorElement;
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const handleLogin = (data) => {
+    console.log(data);
   };
+
   return (
     <div className="lg:w-[540px] w-[95%] mx-auto">
       <div className=" text-center mt-2 capitalize">
@@ -21,13 +31,38 @@ const Login = () => {
         </p>
       </div>
       <SocialLogin></SocialLogin>
-      <form>
+      <form onSubmit={handleSubmit(handleLogin)}>
         <input
-          className="border border-[#F3F3F3] w-full py-4 px-3 rounded-lg font-medium text-[16px] mb-[25px] focus:outline-none"
-          type="email"
+          className={`${
+            errors.email
+              ? "border border-[#FF5630] w-full py-4 px-3 rounded-lg font-medium text-[16px] mb-[16px] outline-none"
+              : "border border-[#F3F3F3] w-full py-4 px-3 rounded-lg font-medium text-[16px] mb-[25px] focus:outline-none"
+          }`}
+          name="email"
           placeholder="@ Your Email "
+          {...register("email", {
+            required: {
+              value: true,
+              message: "Email is Required",
+            },
+            pattern: {
+              value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+              message: "Please enter a valid email address.",
+            },
+          })}
         />
-        <div class="relative flex justify-end items-center border border-[#F3F3F3] w-full rounded-lg font-medium">
+        {/* email error handle  */}
+        {errors.email && (
+          <p className=" text-[#FF5630] mb-[16px] ">{errors.email.message}</p>
+        )}
+        {/* password input  */}
+        <div
+          className={`${
+            errors.password
+              ? "relative flex justify-end items-center border border-[#FF5630] w-full rounded-lg font-medium"
+              : "relative flex justify-end items-center border border-[#F3F3F3] w-full rounded-lg font-medium"
+          }`}
+        >
           <i className="pl-[1rem] cursor-pointer">
             <img src={lock} alt="" />
           </i>
@@ -35,10 +70,23 @@ const Login = () => {
             id="password"
             type={!isVisible ? "password" : "text"}
             name="password"
-            class="h-14 w-full  focus:outline-none focus:border-primary ml-2"
+            className="h-14 w-full  focus:outline-none focus:border-primary ml-2"
             placeholder="Create Password"
+            {...register("password", {
+              required: {
+                value: true,
+                message: "Password is Required",
+              },
+              minLength: {
+                value: 6,
+                message: "Must be 6 characters or longer",
+              },
+            })}
           />
-          <i className="pr-[1rem] cursor-pointer" onClick={toggle}>
+          <i
+            className="pr-[1rem] cursor-pointer"
+            onClick={() => setVisible(!isVisible)}
+          >
             {isVisible ? (
               <BsEyeFill className="text-[#DCDFE5] text-2xl" />
             ) : (
@@ -46,13 +94,18 @@ const Login = () => {
             )}
           </i>
         </div>
-        <div className="flex items-center mt-[28px] mb-[35px] text-[#B0B7C3] ">
+        {/* password error  */}
+        {errors.password && (
+          <p className=" text-[#FF5630] my-[16px] ">
+            {errors.password.message}
+          </p>
+        )}
+        <div className="flex items-center my-[16px]  text-[#B0B7C3] ">
           <input
             id="default-checkbox"
             type="checkbox"
             value=""
-            className="lg:w-[28px] lg:h-[28px] rounded-lg bg-[#EDEFF1] "
-            required
+            className="lg:w-[23px] lg:h-[28px] rounded-lg bg-[#EDEFF1] "
           />
           <label
             for="default-checkbox"
