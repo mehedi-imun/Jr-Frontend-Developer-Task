@@ -1,27 +1,33 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import lock from "../../assets/lock-rounded.png";
 import SocialLogin from "../shared/SocialLogin";
-
+import { signInReducer } from "../../redux/authSlice";
+import { toast, ToastContainer } from "react-toastify";
 const Login = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  let from = location.state?.from?.pathname || "/";
   // show password state
   const [isVisible, setVisible] = useState(false);
   // handle login
-  let errorElement;
+  const dispatch = useDispatch();
+  const { loading, error, token } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const handleLogin = (data) => {
-    console.log(data);
+    dispatch(signInReducer(data));
+    localStorage.setItem("token", token);
+    navigate("/dashboard");
   };
 
+  if (error) {
+    toast.error(error);
+  }
   return (
     <div className="lg:w-[540px] w-[95%] mx-auto">
       <div className=" text-center mt-2 capitalize">
@@ -117,7 +123,7 @@ const Login = () => {
         <input
           className="bg-[#377DFF] p-3 w-full text-[#FFFFFF] font-medium rounded-lg "
           type="submit"
-          value="Sign In"
+          value={`${loading ? "loading" : "Sign In"}`}
         />
       </form>
       <p className="text-center mt-[30px] text-[#B0B7C3] font-medium text-[16px]">
@@ -126,6 +132,7 @@ const Login = () => {
           Sign Up
         </Link>
       </p>
+      <ToastContainer></ToastContainer>
     </div>
   );
 };
