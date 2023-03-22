@@ -23,16 +23,16 @@ const SignUp = () => {
 
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.user);
-  const handleRegister = async (data) => {
+  const handleRegister = (data) => {
     const { checkBox: pwd, ...userInputData } = data;
-    await dispatch(signUpReducer(userInputData));
-    toast.success("successfully created account please login");
-    reset();
+    dispatch(signUpReducer(userInputData));
+    if (!error) {
+      toast.success("successfully created please login");
+      reset();
+      setPassword("");
+    }
   };
 
-  if (error) {
-    toast.error(error);
-  }
   return (
     <div className="lg:w-[540px] w-[95%] mx-auto">
       <div className=" text-center mt-2 capitalize">
@@ -68,6 +68,7 @@ const SignUp = () => {
         {errors.email && (
           <p className=" text-[#FF5630] mb-[16px] ">{errors.email.message}</p>
         )}
+        {error && <p className=" text-[#FF5630] mb-[16px] ">{error}</p>}
         <div
           className={`${
             errors.name

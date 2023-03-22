@@ -1,24 +1,35 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axiosPrivate from "../api/api";
-
 const initialState = {
   loading: false,
   error: "",
   token: "",
 };
-
+// signup 
 export const signUpReducer = createAsyncThunk(
-  "signupUser",
+  "signUpUser",
   async (userData) => {
-    const response = await axiosPrivate.post("/register", userData);
-    return response.data;
+    const res = await fetch("https://reqres.in/api/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    return res.json();
   }
 );
+// login 
 export const signInReducer = createAsyncThunk(
   "signInUser",
   async (userData) => {
-    const response = await axiosPrivate.post("/login", userData);
-    return response.data;
+    const res = await fetch("https://reqres.in/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    return res.json();
   }
 );
 
@@ -37,15 +48,16 @@ const authSlice = createSlice({
         state.error = action.payload.error;
       } else {
         state.error = action.payload.message;
+        state.token = action.payload.token;
       }
     },
     [signUpReducer.rejected]: (state, action) => {
       state.loading = false;
     },
+    // login
     [signInReducer.pending]: (state, action) => {
       state.loading = true;
     },
-    // login
     [signInReducer.fulfilled]: (state, action) => {
       state.loading = false;
       if (action.payload.error) {
@@ -57,6 +69,7 @@ const authSlice = createSlice({
     },
     [signInReducer.rejected]: (state, action) => {
       state.loading = false;
+      state.error = action.payload.error;
     },
   },
 });

@@ -2,11 +2,10 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import lock from "../../assets/lock-rounded.png";
 import SocialLogin from "../shared/SocialLogin";
 import { signInReducer } from "../../redux/authSlice";
-import { toast, ToastContainer } from "react-toastify";
 const Login = () => {
   const navigate = useNavigate();
   // show password state
@@ -21,13 +20,12 @@ const Login = () => {
   } = useForm();
   const handleLogin = (data) => {
     dispatch(signInReducer(data));
+  };
+  if (!error) {
     localStorage.setItem("token", token);
     navigate("/dashboard");
-  };
-
-  if (error) {
-    toast.error(error);
   }
+
   return (
     <div className="lg:w-[540px] w-[95%] mx-auto">
       <div className=" text-center mt-2 capitalize">
@@ -61,6 +59,7 @@ const Login = () => {
         {errors.email && (
           <p className=" text-[#FF5630] mb-[16px] ">{errors.email.message}</p>
         )}
+        {error && <p className=" text-[#FF5630] mb-[16px] ">{error}</p>}
         {/* password input  */}
         <div
           className={`${
@@ -132,7 +131,6 @@ const Login = () => {
           Sign Up
         </Link>
       </p>
-      <ToastContainer></ToastContainer>
     </div>
   );
 };

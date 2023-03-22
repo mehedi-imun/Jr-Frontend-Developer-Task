@@ -59,13 +59,20 @@ const Users = () => {
       setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
     }
   };
-  let pageIncrementBtn =null;
-  if(pages.length > maxPageNumberLimit){
-    pageIncrementBtn=<li className="border h-[32px] w-[32px] flex justify-center items-center bg-transparent text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer " onClick={handleNextBtn}>&hellip;</li>
+  let pageIncrementBtn = null;
+  if (pages.length > maxPageNumberLimit) {
+    pageIncrementBtn = (
+      <li
+        className="border h-[32px] w-[32px] flex justify-center items-center bg-transparent text-[#333333] rounded-md mr-3 border-[#F1F1F1] cursor-pointer "
+        onClick={handleNextBtn}
+      >
+        &hellip;
+      </li>
+    );
   }
 
   return (
-    <div>
+    <div className="container mx-auto overflow-hidden">
       <div className="lg:px-6 px-2 mt-6">
         <div className="flex items-center justify-between ">
           <div class="relative flex justify-end items-center border border-[#F3F3F3] lg:w-96 rounded-lg font-medium ">
@@ -99,7 +106,7 @@ const Users = () => {
           <h3 className="my-6 text-[#323B4B] font-semibold">Users List</h3>
           <div class="relative overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+              <thead class="text-xs  uppercase bg-[#FAFBFC] text-[#4E5D78]">
                 <tr>
                   <th scope="col" class="px-6 py-3 rounded-l-lg">
                     #ID
@@ -117,7 +124,7 @@ const Users = () => {
               </thead>
               <tbody>
                 {currentItems?.map((user) => (
-                  <tr class="bg-white dark:bg-gray-800">
+                  <tr key={user.id} class="bg-white dark:bg-gray-800">
                     <td class="px-6 py-4">{user.id}</td>
                     <td class="px-6 py-4">
                       <div className="flex items-center">
@@ -127,8 +134,9 @@ const Users = () => {
                           alt=""
                         />
 
-                        <h3 className="text-[#4E5D78] ml-2">
+                        <h3 className="text-[#4E5D78] ml-2 ">
                           {user.first_name}
+                          <span> {user.last_name}</span>
                         </h3>
                       </div>
                     </td>
@@ -146,7 +154,7 @@ const Users = () => {
           </div>
         </div>
       </div>
-{/* pagination  */}
+      {/* pagination  */}
       <ul className="flex justify-start ml-8 my-6">
         <button
           disabled={currentPage == pages[0] ? true : false}
