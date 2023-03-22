@@ -83,8 +83,7 @@ const Users = () => {
               class="h-11 w-full focus:outline-none ml-2"
               placeholder="Search"
             />
-            <i className="pr-[1rem] cursor-pointer">
-              {/* <img src={name} alt="" /> */}
+            <i className="pr-[1rem] cursor-pointer"> 
               <RiSearchLine className="text-[#B0B7C3] text-xl" />
             </i>
           </div>
@@ -108,16 +107,16 @@ const Users = () => {
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead class="text-xs  uppercase bg-[#FAFBFC] text-[#4E5D78]">
                 <tr>
-                  <th scope="col" class="px-6 py-3 rounded-l-lg">
+                  <th scope="col" class="lg:px-6 px-2 py-1 lg:py-3 rounded-l-lg">
                     #ID
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="lg:px-6 px-2 py-1 lg:py-3 ">
                     USER
                   </th>
-                  <th scope="col" class="px-6 py-3">
+                  <th scope="col" class="lg:px-6 px-2 py-1 lg:py-3 ">
                     EMAIL
                   </th>
-                  <th scope="col" class="px-6 py-3 rounded-r-lg">
+                  <th scope="col" class="lg:px-6 px-2 py-1 lg:py-3 ">
                     OPTIONS
                   </th>
                 </tr>
@@ -125,16 +124,16 @@ const Users = () => {
               <tbody>
                 {currentItems?.map((user) => (
                   <tr key={user.id} class="bg-white dark:bg-gray-800">
-                    <td class="px-6 py-4">{user.id}</td>
-                    <td class="px-6 py-4">
+                    <td class="lg:px-6 px-2 py-1 lg:py-3 ">{user.id}</td>
+                    <td class="lg:px-6 px-2 py-1 lg:py-3 ">
                       <div className="flex items-center">
                         <img
-                          class="w-[60px] h-[60px] rounded"
+                          class="lg:w-[60px] w-[40px] rounded"
                           src={user.avatar}
                           alt=""
                         />
 
-                        <h3 className="text-[#4E5D78] ml-2 ">
+                        <h3 className="text-[#4E5D78] ml-2 lg:block hidden">
                           {user.first_name}
                           <span> {user.last_name}</span>
                         </h3>
@@ -142,11 +141,11 @@ const Users = () => {
                     </td>
                     <th
                       scope="row"
-                      class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      class="lg:px-6 px-2 py-1 lg:py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {user.email}
                     </th>
-                    <td class="px-6 py-4">...</td>
+                    <td class="lg:px-6 px-2 py-1 lg:py-3 ">...</td>
                   </tr>
                 ))}
               </tbody>
