@@ -4,7 +4,7 @@ const initialState = {
   error: "",
   token: "",
 };
-// signup 
+
 export const signUpReducer = createAsyncThunk(
   "signUpUser",
   async (userData) => {
@@ -18,7 +18,7 @@ export const signUpReducer = createAsyncThunk(
     return res.json();
   }
 );
-// login 
+// login
 export const signInReducer = createAsyncThunk(
   "signInUser",
   async (userData) => {
@@ -47,7 +47,7 @@ const authSlice = createSlice({
       if (action.payload.error) {
         state.error = action.payload.error;
       } else {
-        state.error = action.payload.message;
+        state.error = action.payload.error;
         state.token = action.payload.token;
       }
     },

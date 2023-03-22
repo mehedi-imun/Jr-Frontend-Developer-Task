@@ -6,25 +6,35 @@ import { Link, useNavigate } from "react-router-dom";
 import lock from "../../assets/lock-rounded.png";
 import SocialLogin from "../shared/SocialLogin";
 import { signInReducer } from "../../redux/authSlice";
+import { toast, ToastContainer } from "react-toastify";
+import Loading from "../shared/Loading";
 const Login = () => {
   const navigate = useNavigate();
   // show password state
   const [isVisible, setVisible] = useState(false);
   // handle login
   const dispatch = useDispatch();
-  const { loading, error, token } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const handleLogin = (data) => {
-    dispatch(signInReducer(data));
+    dispatch(signInReducer(data))
+      .then((response) => {
+        // handle successful registration here
+        if (response.payload.error) {
+          toast.error(response.payload.error);
+        } else {
+          localStorage.setItem("token", response.payload.token);
+          navigate("/dashboard");
+        }
+      })
+      .catch((error) => {
+        console.log("Registration error:", error);
+      });
   };
-  if (!error) {
-    localStorage.setItem("token", token);
-    navigate("/dashboard");
-  }
 
   return (
     <div className="lg:w-[540px] w-[95%] mx-auto">
@@ -59,7 +69,6 @@ const Login = () => {
         {errors.email && (
           <p className=" text-[#FF5630] mb-[16px] ">{errors.email.message}</p>
         )}
-        {error && <p className=" text-[#FF5630] mb-[16px] ">{error}</p>}
         {/* password input  */}
         <div
           className={`${
@@ -119,11 +128,13 @@ const Login = () => {
             Remember Me
           </label>
         </div>
-        <input
+        <button
           className="bg-[#377DFF] p-3 w-full text-[#FFFFFF] font-medium rounded-lg "
           type="submit"
-          value={`${loading ? "loading" : "Sign In"}`}
-        />
+        >
+          {" "}
+          {loading ? <Loading></Loading> : "Sign In"}
+        </button>
       </form>
       <p className="text-center mt-[30px] text-[#B0B7C3] font-medium text-[16px]">
         Don’t have an account yet?{" "}
@@ -131,6 +142,7 @@ const Login = () => {
           Sign Up
         </Link>
       </p>
+      <ToastContainer />
     </div>
   );
 };

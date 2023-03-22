@@ -10,6 +10,7 @@ import lock from "../../assets/lock-rounded.png";
 import name from "../../assets/name-ounded.png";
 import SocialLogin from "../shared/SocialLogin";
 import { signUpReducer } from "../../redux/authSlice";
+import Loading from "../shared/Loading";
 
 const SignUp = () => {
   const [isVisible, setVisible] = useState(false);
@@ -22,16 +23,32 @@ const SignUp = () => {
   } = useForm();
 
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.user);
+
   const handleRegister = (data) => {
     const { checkBox: pwd, ...userInputData } = data;
-    dispatch(signUpReducer(userInputData));
-    if (!error) {
-      toast.success("successfully created please login");
-      reset();
-      setPassword("");
-    }
+    dispatch(signUpReducer(userInputData))
+      .then((response) => {
+        // handle successful registration here
+        if (response.payload.error) {
+          toast.error(response.payload.error);
+        } else {
+          toast.success("successfully create! Please Login");
+        }
+      })
+      .catch((error) => {
+        // handle registration error here
+        console.log("Registration error:", error);
+      });
   };
+
+  const { loading, error } = useSelector((state) => state.user);
+
+  // // render loading and error states here
+  // if (loading) {
+  //   // render loading spinner or message
+  // } else if (error) {
+  //   // render error message
+  // }
 
   return (
     <div className="lg:w-[540px] w-[95%] mx-auto">
@@ -68,7 +85,6 @@ const SignUp = () => {
         {errors.email && (
           <p className=" text-[#FF5630] mb-[16px] ">{errors.email.message}</p>
         )}
-        {error && <p className=" text-[#FF5630] mb-[16px] ">{error}</p>}
         <div
           className={`${
             errors.name
@@ -170,11 +186,12 @@ const SignUp = () => {
             {errors.checkBox.message}
           </p>
         )}
-        <input
+        <button
           className="bg-[#377DFF] p-3 w-full text-[#FFFFFF] font-medium rounded-lg cursor-pointer "
           type="submit"
-          value={`${loading ? "loading" : "Sign Up"}`}
-        />
+        >
+          {loading ? <Loading></Loading> : "Sign Up"}
+        </button>
       </form>
       <p className="text-center mt-[30px] text-[#B0B7C3] font-medium text-[16px]">
         Already have an account?{" "}
@@ -182,6 +199,7 @@ const SignUp = () => {
           Sign In
         </Link>
       </p>
+
       <ToastContainer></ToastContainer>
     </div>
   );
